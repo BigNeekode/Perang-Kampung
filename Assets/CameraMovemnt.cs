@@ -1,43 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMovemnt : MonoBehaviour
+public class CameraMovement : MonoBehaviour
 {
-    Transform tr;
-    public float speed = 10f;
-    public float zoomMin = 10f;
-    public float zoomMax = 45f;
-    public float VerticalMax = 25f;
-    public float VerticalMin = -25f;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float zoomSpeed = 1f;
+    [SerializeField] private float zoomMin = 20f;
+    [SerializeField] private float zoomMax = 60f;
+    [SerializeField] private float verticalMin = -10f;
+    [SerializeField] private float verticalMax = 10f;
+
+    private Transform tr;
+    private Camera cam;
 
     private void Start()
     {
         tr = GetComponent<Transform>();
+        cam = Camera.main;
     }
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.D)&& tr.position.z <= VerticalMax)
-        {
-            tr.position += new Vector3(0,0,1) * speed * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.A) && tr.position.z >= VerticalMin)
-        {
-            tr.position -= new Vector3(0,0,1) * speed * Time.deltaTime;
-        }
+        HandleMovement();
+        HandleZoom();
+    }
 
-        // scroll mouse wheel to zoom in/out editing the camera fov
-        if (Input.mouseScrollDelta.y > 0 && Camera.main.fieldOfView > zoomMin)
-        {
-            Camera.main.fieldOfView -= 1;
-        }
-        if (Input.mouseScrollDelta.y < 0 && Camera.main.fieldOfView < zoomMax)
-        {
-            Camera.main.fieldOfView += 1;
-        }
+    private void HandleMovement()
+    {
+        float move = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+        float newZ = Mathf.Clamp(tr.position.z + move, verticalMin, verticalMax);
+        tr.position = new Vector3(tr.position.x, tr.position.y, newZ);
+    }
 
-
-
+    private void HandleZoom()
+    {
+        float scroll = Input.mouseScrollDelta.y * zoomSpeed;
+        float newFov = Mathf.Clamp(cam.fieldOfView - scroll, zoomMin, zoomMax);
+        cam.fieldOfView = newFov;
     }
 }

@@ -17,3 +17,4 @@ MonoBehaviour:
   Damage: 10
   Speed: 3
   AttackRange: 17
+  Cost: 125

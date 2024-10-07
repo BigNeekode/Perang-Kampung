@@ -51,7 +51,6 @@ public class UnitController : MonoBehaviour
 
         // Scan for closer targets in front of the unit
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10f, targetLayerMask);
-        Debug.Log(hitColliders.Length);
         Transform closestTarget = null;
         float closestDistance = Mathf.Infinity;
 
